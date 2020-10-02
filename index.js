@@ -168,7 +168,7 @@
 
 	      	let list = response.data.map((dataObj)=>{
 	      		return '<li class="list-group-item">'+dataObj.name+'</li>';
-	      	});
+	      	}).join('');
 
 	      	console.log(list);
 	      	const retData = `
