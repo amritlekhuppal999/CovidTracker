@@ -225,7 +225,7 @@
 					<td>${dataObj.cured}</td>
 					<td>${dataObj.deaths}</td>
 				</tr>`;
-			});
+			}).join('');
 
 			let stateDataRow = `<td colspan="5">
 				<div style="overflow-x: auto; height:250px;">
