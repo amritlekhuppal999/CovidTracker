@@ -1,0 +1,107 @@
+body{
+    background-color: #DAE0E2!important;
+}
+
+.myNav{
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.display-body{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    /*margin-left: 10px;
+    margin-right: 10px;*/ 
+    /*box-shadow: 3px 9px 16px 1px #888888;*/
+}
+
+.margin-top-15{
+    margin-top: 15px;
+}
+
+.font-size-30{
+    font-size: 30px;
+}
+
+.country-name-flag{
+    display: flex;
+    align-items: center;
+    /*justify-content: space-between;*/ 
+}
+
+#country-flag{
+    padding-bottom: 4px;
+    margin-left: 5px;
+    /*object-fit: cover;*/
+    height: 25px;
+    width: 35px;
+    /*border-radius: 2px;*/
+}
+
+.case-block{
+    /*border-right: 2px solid lightgrey;*/
+    border-bottom: 5px solid purple;
+}
+.case-count{
+    color:purple;
+}
+
+.recovered-block{
+    /*border-right: 2px solid lightgrey;*/
+    border-bottom: 5px solid green;
+}
+.recovered-count{
+    color:green;
+}
+
+.deaths-block{
+    border-bottom: 5px solid red;
+}
+.death-count{
+    color:red;
+}
+
+/*#covid-data{
+	background-color: white;
+    padding:20px;
+	margin: 30px;
+	border: 2px solid lightgrey;
+	font-size: 20px;
+    border-radius: 5px;
+}*/
+#show-region, #show-latest{
+	margin-top: 25px;
+}
+#show-region-data{
+	height: 50px !important;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+#show-latest{
+	display:none;
+}
+
+.search-bar{
+	margin-top: 15px; 
+	display: flex;
+	align-items: center;
+	border: 1px solid black;
+	width:350px;
+	border-radius: 2px;
+	
+}
+.search-bar > input{
+	width:300px;
+	border-radius: 2px;
+	border: none;
+	padding: 5px 10px;
+}
+.search-bar > i{
+	margin-left: 5px;
+	padding:8px;
+	cursor: pointer;
+}
