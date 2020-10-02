@@ -227,15 +227,15 @@
 				</tr>`;
 			}).join('');
 
-			let stateDataRow = `<td colspan="5">
+			/*let stateDataRow = `<td colspan="5">
 				<div style="overflow-x: auto; height:250px;">
 					<table>
 			         ${stateData}
 			      </table>
 				</div>
-			</td>`;
+			</td>`;*/
 
-			document.getElementById('state-data').innerHTML = stateDataRow;
+			document.getElementById('state-data').innerHTML = stateData;
 		})
 		.catch(()=>{
 			console.log(`Something went wrong in STATE PROMISE`);
