@@ -10,7 +10,11 @@ body{
     z-index: 5; 
 }
 
-
+.fixed-table-head thead th{
+    position: sticky;
+    top:0;
+    background-color: white;
+}
 
 .margin-top-15{
     margin-top: 15px;

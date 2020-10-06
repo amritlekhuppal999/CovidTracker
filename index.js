@@ -1,9 +1,13 @@
 	$(document).ready(function(){
-		getIpAdd();
+		//getIpAdd();
 		showRegionList();
 
 		//Default Region Data
 		getUserRegionData();
+
+		LoadBarChart();
+
+		//LoadPieChart();
 	});
 
 	// function selTest(){
@@ -11,16 +15,16 @@
 	// }
 
 	// GET USER IP ADDRESS
-  	function getIpAdd(){
-  		let API_IPv4 = 'https://api.ipify.org?format=json';
-  		let API_IPv6 = 'https://api6.ipify.org?format=json';
-  		$.get(API_IPv4, (response, status)=>{
-  			//console.log(response);
+  	// function getIpAdd(){
+  	// 	let API_IPv4 = 'https://api.ipify.org?format=json';
+  	// 	let API_IPv6 = 'https://api6.ipify.org?format=json';
+  	// 	$.get(API_IPv4, (response, status)=>{
+  	// 		//console.log(response);
   			
-  			document.getElementById("show-ip").innerHTML = response.ip;
-  			//getRegionFromIP(response.ip);
-  		});
-  	}
+  	// 		document.getElementById("show-ip").innerHTML = response.ip;
+  	// 		//getRegionFromIP(response.ip);
+  	// 	});
+  	// }
 
   	// API TO GET COUNTRY FLAG BASED ON COUNTRY NAME
   	function getCountryFlag(country_name){
@@ -90,7 +94,7 @@
 		let region_promise = $.get(region_API);
 
 		region_promise.then((response)=>{
-			//console.log(response);
+			//console.log(response.data.summary);
 			let respObj = response.data.summary;
 			let retData = `<div class="row">
 					<div class="col-md-12">
@@ -112,6 +116,13 @@
 					</div>
 				</div>`;
 			document.getElementById("specific-region").innerHTML = retData;
+
+			//Set Data to show BAR CHART
+			let chartData = {
+				label: ['Cases', 'Recovered', 'Deaths', 'Critical', 'Active'],
+				data: [respObj.total_cases, respObj.recovered, respObj.deaths, respObj.critical, respObj.active_cases]
+			};
+			LoadBarChart(chartData);
 		})
 		.then(()=>{
 			//Display Country Flag
@@ -168,7 +179,7 @@
 
 	      	let list = response.data.map((dataObj)=>{
 	      		return '<li class="list-group-item">'+dataObj.name+'</li>';
-	      	}).join('');
+	      	}).join("");
 
 	      	console.log(list);
 	      	const retData = `
@@ -215,7 +226,7 @@
 		let state_promise = $.get(state_API);
 
 		state_promise.then((response)=>{
-			console.log(response);
+			//console.log(response);
 			//response = JSON.parse(response);
 			let stateData = response.map((dataObj)=>{
 				return `<tr>
@@ -225,15 +236,15 @@
 					<td>${dataObj.cured}</td>
 					<td>${dataObj.deaths}</td>
 				</tr>`;
-			}).join('');
+			}).join("");
 
-			/*let stateDataRow = `<td colspan="5">
-				<div style="overflow-x: auto; height:250px;">
-					<table>
-			         ${stateData}
-			      </table>
-				</div>
-			</td>`;*/
+			// let stateDataRow = `<td colspan="5">
+			// 	<div style="overflow-x: auto; height:250px;">
+			// 		<table>
+			//          ${stateData}
+			//       </table>
+			// 	</div>
+			// </td>`;
 
 			document.getElementById('state-data').innerHTML = stateData;
 		})
@@ -248,4 +259,92 @@
 	// 	district_API = `https://documenter.getpostman.com/view/10724784/SzYXXKmA?version=latest`;
 	// }
 
+
+	// Show BAR Chart Data
+	function LoadBarChart(chartData){
+
+		var ctx = document.getElementById('covid-chart').getContext('2d');
+		var myChart = new Chart(ctx, {
+		    type: 'bar',
+		    data: {
+		        labels: [...chartData.label],
+		        datasets: [{
+		            label: 'COVID-19 GRAPH',
+		            data: [...chartData.data],
+		            backgroundColor: [
+		                'purple',
+		                'green',
+		                'red',
+		                'rgba(75, 192, 192, 0.2)',
+		                'rgba(255, 159, 64, 0.2)'
+		            ],
+		            borderColor: [
+		                'rgba(255, 206, 86, 1)',
+		                'rgba(54, 162, 235, 1)',
+		                'rgba(255, 99, 132, 1)',
+		                'rgba(75, 192, 192, 1)',
+		                'rgba(255, 159, 64, 1)'
+		            ],
+		            borderWidth: 1
+		        }]
+		    },
+		    options: {
+		        scales: {
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero: true
+		                }
+		            }]
+		        }
+		    }
+		});
+	}
+
+	// Show Pie Chart Data (Not dynamic yet)
+	function LoadPieChart(){
+		var ctx = document.getElementById('covid-pie-chart').getContext('2d');
+		var myChart = new Chart(ctx, {
+		    type: 'doughnut',
+		    data: {
+
+
+		        labels: ['Total Cases', 'Recovered', 'Deaths'],
+		        datasets: [{
+		            data: [6626291, 5586703, 102746],
+		            backgroundColor: [
+		                'purple',
+		                'green',
+		                'red',		                
+		            ],
+
+		            borderWidth: 1,
+		            // hoverBorderColor: ['purple', '#32a852', 'red'],
+
+		            hoverBackgroundColor: [
+		                'purple',
+		                '#32a852',
+		                '#ff0011',		                
+		            ],
+
+		            // borderColor: [
+		            //     'rgba(255, 99, 132, 1)',
+		            //     'rgba(54, 162, 235, 1)',
+		            //     'rgba(255, 206, 86, 1)',
+		            //     'rgba(75, 192, 192, 1)',
+		            //     'rgba(153, 102, 255, 1)',
+		            //     'rgba(255, 159, 64, 1)'
+		            // ],
+		            // borderWidth: 1
+		        }],
+
+		    },
+		    options: {
+		      cutoutPercentage: 50, //50 - for doughnut, 0 - for pie
+		      animation:{
+		      	animateRotate: true, //will animate in with a rotation animation.
+		        	animateScale: true, //will animate scaling the chart from the center outwards.
+		      }
+		    }
+		});
+	}
    

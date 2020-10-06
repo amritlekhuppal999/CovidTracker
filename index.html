@@ -55,14 +55,14 @@
 					<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">Features</a>
+					<a class="nav-link" href="#">Donate</a>
 				</li>
-				<li class="nav-item">
+				<!-- <li class="nav-item">
 					<a class="nav-link" href="#">Pricing</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link disabled" href="#">Disabled</a>
-				</li>
+				</li> -->
 			</ul>
 		</div>
 	</nav>
@@ -90,31 +90,44 @@
 						<h4 class="card-title">Your IP Address: <span id="show-ip"></span></h4>
 					</div>
 				</div> -->
-			</div>
-
-			
-			<div class="col-md-6">
 
 				<!-- SHOW DATA OF SPECIFIC REGION -->
 				<div class="card">
 					<div class="card-body">
-						
 						<div id="specific-region">
-							
 							<!-- Loading Spinner -->
 							<div class="d-flex justify-content-center">
 								<div class="spinner-border" role="status">
 								   <span class="sr-only">Loading...</span>
 								</div>
 							</div>
-
 						</div>
+					</div>
+				</div>
+				
 
+				<!-- BAR CHART -->
+				<div class="card" style="margin-top: 15px; margin-bottom: 15px;">
+					<div class="card-body">
+						<!-- width="400" height="400" -->
+						<canvas id="covid-chart"></canvas>	
 					</div>
 				</div>
 
-				<!-- SHOW STATE DATA TABLE -->
-				<div class="card" style="margin-top: 15px">
+				<!-- PIE CHART --> <!-- width="400" height="400" -->
+				<!-- <div class="card">
+					<div class="card-body">
+						
+						<canvas id="covid-pie-chart"></canvas>	
+					</div>
+				</div> -->
+
+			</div>
+
+			
+			<!-- SHOW STATE DATA TABLE -->
+			<div class="col-md-6">
+				<div class="card" style="">
 					<!-- Header -->
 					<div class="card-header">
 						Indian States
@@ -122,7 +135,7 @@
 
 					<!-- Body -->
 					<div class="card-body">
-						<div id="state-data-table" style="overflow-x: auto;">
+						<div id="state-data-table" style="overflow-x: auto; max-height: 500px; position: relative;">
 							
 							<!-- Loading Spinner -->
 								<!-- <div class="d-flex justify-content-center">
@@ -130,14 +143,7 @@
 								   <span class="sr-only">Loading...</span>
 								</div>
 							</div> -->
-							<style>
-							.table >thead >th{
-							  position:sticky;
-							  top:0;
-							  background-color: white;
-							}
-							</style>
-							<table class="table" style="overflow:auto; max-height:500px;">
+							<table class="table fixed-table-head">
 								<thead>
 									<tr>
 										<th>State</th>
