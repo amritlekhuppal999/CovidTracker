@@ -5,9 +5,9 @@
 		//Default Region Data
 		getUserRegionData();
 
-		LoadBarChart();
+		//LoadBarChart();
 
-		//LoadPieChart();
+		LoadPieChart();
 	});
 
 	// function selTest(){
@@ -116,13 +116,6 @@
 					</div>
 				</div>`;
 			document.getElementById("specific-region").innerHTML = retData;
-
-			//Set Data to show BAR CHART
-			let chartData = {
-				label: ['Cases', 'Recovered', 'Deaths', 'Critical', 'Active'],
-				data: [respObj.total_cases, respObj.recovered, respObj.deaths, respObj.critical, respObj.active_cases]
-			};
-			LoadBarChart(chartData);
 		})
 		.then(()=>{
 			//Display Country Flag
@@ -130,6 +123,21 @@
 		})
 		.catch(()=>{
 			console.log(`something went wrong in getRegionData function`);
+		});
+
+		//Set Data to show BAR/PIE CHART
+		region_promise.then((response)=>{
+			let respObj = response.data.summary;
+			let chartData = {
+				label: ['Cases', 'Recovered', 'Deaths', 'Critical', 'Active'],
+				data: [respObj.total_cases, respObj.recovered, respObj.deaths, respObj.critical, respObj.active_cases]
+			};
+			//LoadBarChart(chartData);
+			console.log(`critical: ${respObj.critical}`);
+			LoadPieChart(chartData);
+		})
+		.catch(()=>{
+			console.log(`Something went wrong in calling Charts from regionData`);
 		});
 	}
 
@@ -301,45 +309,38 @@
 	}
 
 	// Show Pie Chart Data (Not dynamic yet)
-	function LoadPieChart(){
+	function LoadPieChart(chartData){
 		var ctx = document.getElementById('covid-pie-chart').getContext('2d');
 		var myChart = new Chart(ctx, {
 		    type: 'doughnut',
 		    data: {
-
-
-		        labels: ['Total Cases', 'Recovered', 'Deaths'],
+		    	  labels: [...chartData.label],
 		        datasets: [{
-		            data: [6626291, 5586703, 102746],
+		            data: [...chartData.data],
 		            backgroundColor: [
 		                'purple',
 		                'green',
-		                'red',		                
+		                'red',
+		                'rgba(75, 192, 192, 0.2)',
+		                'orange'		                
 		            ],
 
-		            borderWidth: 1,
-		            // hoverBorderColor: ['purple', '#32a852', 'red'],
-
+		            hoverBorderWidth: 4,
+		            hoverBorderColor: `white`,
+		            
 		            hoverBackgroundColor: [
 		                'purple',
-		                '#32a852',
-		                '#ff0011',		                
-		            ],
-
-		            // borderColor: [
-		            //     'rgba(255, 99, 132, 1)',
-		            //     'rgba(54, 162, 235, 1)',
-		            //     'rgba(255, 206, 86, 1)',
-		            //     'rgba(75, 192, 192, 1)',
-		            //     'rgba(153, 102, 255, 1)',
-		            //     'rgba(255, 159, 64, 1)'
-		            // ],
+		                'green',
+		                'red',
+		                'rgba(75, 192, 192, 0.2)',
+		                'orange'	                
+		            ]
 		            // borderWidth: 1
 		        }],
 
 		    },
 		    options: {
-		      cutoutPercentage: 50, //50 - for doughnut, 0 - for pie
+		      cutoutPercentage: 35, //50 - for doughnut, 0 - for pie
 		      animation:{
 		      	animateRotate: true, //will animate in with a rotation animation.
 		        	animateScale: true, //will animate scaling the chart from the center outwards.
