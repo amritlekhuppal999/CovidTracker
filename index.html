@@ -10,6 +10,7 @@
 
   	<!-- Local CSS -->
   	<link rel="stylesheet" href="index.css">
+  	<link rel="stylesheet" href="index.media.css">
 
   	<!-- Bootstrap CSS -->
   	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -72,10 +73,29 @@
 				<div class="card margin-bottom-15">
 					<div class="card-body">
 						
-						<h4>Region</h4>
-						<select id="select-region" class="form-control" onchange="getSelectedRegionData()">
-			  			<option id="opt-region">Select</option>
-			  		</select>
+						<div style="display: flex; align-items: center; justify-content: space-between;">
+							<!-- <span>Region</span> -->
+							<select id="select-region" class="form-control" onchange="getSelectedRegionData()" style="width: 225px;">
+				  				<option id="opt-region">Region</option>
+				  			</select>
+
+				  			<!-- Load Region Name -->
+				  			<input type="hidden" name="region-name" id="region-name" />
+
+				  			<!-- Display Flag -->
+				  			<span id="country-flag-span" style="margin-left: 5px;"></span>
+						</div>
+						<br />
+
+						<!-- SHOW DATA OF SPECIFIC REGION -->
+						<div id="specific-region">
+							<!-- Loading Spinner -->
+							<div class="d-flex justify-content-center">
+								<div class="spinner-border" role="status">
+								   <span class="sr-only">Loading...</span>
+								</div>
+							</div>
+						</div>
 			  		
 					</div>	
 				</div>
@@ -87,21 +107,6 @@
 					</div>
 				</div> -->
 
-				<!-- SHOW DATA OF SPECIFIC REGION -->
-				<div class="card">
-					<div class="card-body">
-						<div id="specific-region">
-							<!-- Loading Spinner -->
-							<div class="d-flex justify-content-center">
-								<div class="spinner-border" role="status">
-								   <span class="sr-only">Loading...</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-
 				<!-- BAR CHART -->
 				<!-- <div class="card" style="margin-top: 15px; margin-bottom: 15px;">
 					<div class="card-body">
@@ -111,58 +116,85 @@
 
 				<!-- PIE CHART -->
 				<div class="card" style="margin-top: 15px; margin-bottom: 15px;">
-					<div class="card-body">
+					<div class="card-body" id="load-pi-canvas">
 						<canvas id="covid-pie-chart"></canvas>	
 					</div>
 				</div>
 
+				<!-- SHOW STATE DATA TABLE -->
+				<div class="card margin-bottom-15" style="">
+					<!-- Header -->
+					<div class="card-header"> Indian States </div>
+
+					<!-- Body -->
+					<div class="card-body" style="padding:0; max-height: 400px; overflow: auto;">
+						<table id="state-data-table" class="table fixed-table-head" style="">
+							<thead class="thead-dark">
+								<tr>
+									<th>State</th>
+									<th>Cases</th>
+									<th>Active</th>
+									<th>Recovered</th>
+									<th>Deaths</th>
+								</tr>
+							</thead>
+							<tbody id="state-data"> <!-- state-data -->
+								<tr style="text-align:center;">
+		  							<td colspan="5">
+		  								<div class="spinner-border" role="status">
+		  									<span class="sr-only">Loading...</span>
+		  								</div>
+		  							</td>
+		  						</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<!-- Footer -->
+					<div class="card-footer"></div>
+				</div>
 			</div>
 
 			
-			<!-- SHOW STATE DATA TABLE -->
+			<!-- GLOBAL DATA SUMMARY -->
 			<div class="col-md-6">
-				<div class="card" style="">
+				<div class="card margin-bottom-15">
 					<!-- Header -->
-					<div class="card-header">
-						Indian States
+					<div class="card-header">GLOBAL DATA SUMMARY
+						<button onclick="return latestData();">View</button>
 					</div>
 
 					<!-- Body -->
-					<div class="card-body">
-						<div id="state-data-table" style="overflow-x: auto; max-height: 500px; position: relative;">
-							
-							<!-- Loading Spinner -->
-								<!-- <div class="d-flex justify-content-center">
-								<div class="spinner-border" role="status">
-								   <span class="sr-only">Loading...</span>
-								</div>
-							</div> -->
-							<table class="table fixed-table-head">
-								<thead>
-									<tr>
-										<th>State</th>
-										<th>Cases</th>
-										<th>Active</th>
-										<th>Recovered</th>
-										<th>Deaths</th>
-									</tr>
-								</thead>
-								<tbody id="state-data"> <!-- state-data -->
-									<tr style="text-align:center;">
-			  							<td colspan="5">
-			  								<div class="spinner-border" role="status">
-			  									<span class="sr-only">Loading...</span>
-			  								</div>
-			  							</td>
-			  						</tr>
-								</tbody>
-							</table>
-
-						</div>
-
+					<div class="card-body" style="padding: 0;">
+						<!-- SHOW LATEST DATA SUMMARY (ALL-REGION) -->
+						<table id="show-latest" class=" table fixed-table-head table-bordered table-hover" style="overflow-x: auto; overflow-y: auto; height:400px; margin-top: 0; margin-bottom: 0;">
+		  					<caption>List of Countries</caption>
+		  					<thead class="thead-dark">
+		  						<tr>
+		  							<th >Country</th>
+		  							<th style="text-align:center;">Total</th>
+		  							<th style="text-align:center;">Active</th>
+		  							<th style="text-align:center;">Critical</th>
+		  							<th style="text-align:center;">Deaths</th>
+		  							<th style="text-align:center;">Recovered</th>
+		  							<th style="text-align:center;">Tested</th>
+		  						</tr>
+		  					</thead>
+		  					<tbody id="show-region-data" style="">
+		  						<tr style="text-align:center;">
+		  							<td colspan="7">
+		  								<div class="spinner-border" role="status">
+		  									<span class="sr-only">Loading...</span>
+		  								</div>
+		  							</td>
+		  						</tr>
+		  					</tbody>
+		  				</table>
 					</div>
-				</div>
 
+					<!-- Footer -->
+					<div class="card-footer"></div>
+				</div>
 			</div>
 
 		</div>
@@ -170,66 +202,23 @@
 		<div class="row">
 
 			<!-- SUPPORTED REGION -->
-			<div class="col-md-6">
-				<div class="card margin-top-15">
+			<!-- <div class="col-md-6"> -->
+				<!-- <div class="card margin-top-15"> -->
 					<!-- Header -->
-					<div class="card-header">SUPPORTED REGION
+					<!-- <div class="card-header">SUPPORTED REGION
 						<button onclick="return allRegions();">View</button>
-					</div>
+					</div> -->
 
 					<!-- Body -->
-					<div class="card-body">
+					<!-- <div class="card-body"> -->
 						<!-- SHOW SUPPORTED REGIONS -->
-						<div id="show-all-region" style="overflow-y: auto; max-height:400px;"></div>
-					</div>
+						<!-- <div id="show-all-region" style="overflow-y: auto; max-height:400px;"></div> -->
+					<!-- </div> -->
 
 					<!-- Footer -->
-					<div class="card-footer"></div>
-				</div>
-			</div>
-
-			<!-- GLOBAL DATA SUMMARY -->
-			<div class="col-md-6">
-				<div class="card margin-top-15">
-					<!-- Header -->
-					<div class="card-header">GLOBAL DATA SUMMARY
-						<button onclick="return latestData();">View</button>
-					</div>
-
-					<!-- Body -->
-					<div class="card-body">
-						<!-- SHOW LATEST DATA SUMMARY (ALL-REGION) -->
-						<div id="show-latest" style="overflow-x: auto; overflow-y: auto; height:400px;">
-			  				<table class="table table-bordered table-hover">
-			  					<caption>List of Countries</caption>
-			  					<thead class="thead-dark">
-			  						<tr>
-			  							<th >Country</th>
-			  							<th style="text-align:center;">Total</th>
-			  							<th style="text-align:center;">Active</th>
-			  							<th style="text-align:center;">Critical</th>
-			  							<th style="text-align:center;">Deaths</th>
-			  							<th style="text-align:center;">Recovered</th>
-			  							<th style="text-align:center;">Tested</th>
-			  						</tr>
-			  					</thead>
-			  					<tbody id="show-region-data" style="">
-			  						<tr style="text-align:center;">
-			  							<td colspan="7">
-			  								<div class="spinner-border" role="status">
-			  									<span class="sr-only">Loading...</span>
-			  								</div>
-			  							</td>
-			  						</tr>
-			  					</tbody>
-			  				</table>
-			  			</div>
-					</div>
-
-					<!-- Footer -->
-					<div class="card-footer"></div>
-				</div>
-			</div>
+					<!-- <div class="card-footer"></div> -->
+				<!-- </div> -->
+			<!-- </div> -->
 
 		</div>
 	</div>

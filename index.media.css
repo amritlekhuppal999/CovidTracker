@@ -1,0 +1,13 @@
+@media only screen and (max-width: 767px){
+	
+	#state-data-table, #show-latest{
+		font-size: 12px;
+	}
+}
+
+
+.flexbox{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}

@@ -1,9 +1,10 @@
 	$(document).ready(function(){
 		//getIpAdd();
-		showRegionList();
+		//Show Region List
+		ShowRegionList();
 
 		//Default Region Data
-		getUserRegionData();
+		GetUserRegionData();
 
 		//LoadBarChart();
 
@@ -35,7 +36,7 @@
 
   		flag.then((response)=>{
   			const flag_link = response[0].flag;
-  			document.getElementById('country-flag-span').innerHTML = `<img src="${flag_link}" id="country-flag" />`
+  			document.getElementById('country-flag-span').innerHTML = `<img src="${flag_link}" id="country-flag"/>`
   		});
   		flag.catch((status)=>{
   			console.log('something went wrong in country flag promise.');
@@ -44,7 +45,7 @@
   	}
 
   	// GET USER REGION + REGION DATA
-  	function getUserRegionData(){
+  	function GetUserRegionData(){
   		const AccsessToken = '82bcb8efa1a4b5';
   		let region_API = `https://ipinfo.io?token=${AccsessToken}`;
   		//let region_API = `https://ipinfo.io/${IP_ADD}/json`;
@@ -65,6 +66,7 @@
 					}
 				});
 				regionName = regionName[0].name;
+				document.getElementById('region-name').value = regionName;
 				//console.log(regionName);
 				
 				//GET SPECIFIC USER REGION DATA
@@ -77,11 +79,13 @@
 		})
 		.catch((status)=>{
 			console.log(`Something went wrong in IP API`);
+
+			document.getElementById('specific-region').innerHTML = '<i>Unable to detect your region, please select your region from the region list to see the status.</i>';
 			//${status.responseText}
 		});
   	}
-   
-  	//GET SELECTED REGION DATA
+   	
+   	//GET SELECTED REGION DATA
 	function getSelectedRegionData(){
 		let ser_bar = document.getElementById("select-region").value;
 		getRegionData(ser_bar);
@@ -96,26 +100,28 @@
 		region_promise.then((response)=>{
 			//console.log(response.data.summary);
 			let respObj = response.data.summary;
+
 			let retData = `<div class="row">
-					<div class="col-md-12">
+					<!-- <div class="col-md-12">
 						<h3 class="country-name-flag">${region_name.toUpperCase()}
 							<span id="country-flag-span"></span>
 						</h3>
-					</div>
+					</div> -->
 					
 					<div class="col-md-4 case-block"><small class="text-muted">Cases</small> 
-						<p class="case-count font-size-30"><b>${respObj.total_cases}</b></p>
+						<p class="case-count font-size-30"><b>${NumToWord(respObj.total_cases)}</b></p>
 					</div>
 
 					<div class="col-md-4 recovered-block"><small class="text-muted">Recovered</small> 
-						<p class="recovered-count font-size-30"><b>${respObj.recovered}</b></p>
+						<p class="recovered-count font-size-30"><b>${NumToWord(respObj.recovered)}</b></p>
 					</div>
 
 					<div class="col-md-4 deaths-block"><small class="text-muted">Deaths</small> 
-						<p class="death-count font-size-30"><b>${respObj.deaths}</b></p>
+						<p class="death-count font-size-30"><b>${NumToWord(respObj.deaths)}</b></p>
 					</div>
 				</div>`;
 			document.getElementById("specific-region").innerHTML = retData;
+			// document.getElementById("region-name").innerHTML = region_name.toUpperCase();
 		})
 		.then(()=>{
 			//Display Country Flag
@@ -159,12 +165,12 @@
 								//console.log(countryObj[key].name);
 								let countryData = countryObj[key];
 								retData += `<tr><td>${countryData.name}</td>
-								<td style="text-align:center;">${countryData.total_cases}</td>
-								<td style="text-align:center;">${countryData.active_cases}</td>
-								<td style="text-align:center;">${countryData.critical}</td>
-								<td style="text-align:center;">${countryData.deaths}</td>
-								<td style="text-align:center;">${countryData.recovered}</td>
-								<td style="text-align:center;">${countryData.tested}</td></tr>`;
+								<td style="text-align:center;">${NumToWord(countryData.total_cases)}</td>
+								<td style="text-align:center;">${NumToWord(countryData.active_cases)}</td>
+								<td style="text-align:center;">${NumToWord(countryData.critical)}</td>
+								<td style="text-align:center;">${NumToWord(countryData.deaths)}</td>
+								<td style="text-align:center;">${NumToWord(countryData.recovered)}</td>
+								<td style="text-align:center;">${NumToWord(countryData.tested)}</td></tr>`;
 								// console.log(countryData);
 							}
 							document.getElementById('show-region-data').innerHTML = retData;
@@ -175,60 +181,87 @@
 	      		});
 	}
 
-   // FUNCTION TO LIST ALL REGIONS
-   function allRegions(){
-   	$.ajax({
-   		url: 'https://api.quarantine.country/api/v1/regions',
-   		type: 'GET',
-	      // data: formData,
-	      dataType: 'JSON',
-	      encoding: true,
-	      success: function(response){
+    // FUNCTION TO LIST ALL REGIONS
+    function allRegions(){
+	   	$.ajax({
+			url: 'https://api.quarantine.country/api/v1/regions',
+			type: 'GET',
+			// data: formData,
+			dataType: 'JSON',
+			encoding: true,
+			success: function(response){
 
-	      	let list = response.data.map((dataObj)=>{
-	      		return '<li class="list-group-item">'+dataObj.name+'</li>';
-	      	}).join("");
+				let list = response.data.map((dataObj)=>{
+					return '<li class="list-group-item">'+dataObj.name+'</li>';
+				}).join("");
 
-	      	console.log(list);
-	      	const retData = `
-	      		<div class="card">
-	      			<ul class="list-group list-group-flush">${list}</ul>
-	      		</div>`;
+				console.log(list);
+				const retData = `
+					<div class="card">
+						<ul class="list-group list-group-flush">${list}</ul>
+					</div>`;
 
-	      	document.getElementById("show-all-region").innerHTML = retData;
-	      }
-	   }); 
-   }
+				document.getElementById("show-all-region").innerHTML = retData;
+			}
+	    }); 
+    }
 
-   //SELECT TAG OPTIONS
-   function showRegionList(){
-   	$.ajax({
-   		url: 'https://api.quarantine.country/api/v1/regions',
-   		type: 'GET',
-	      // data: formData,
-	      dataType: 'JSON',
-	      encoding: true,
-	      success: function(response){
-	      	
-	      	let retData = response.data.map((dataObj, index)=>{
-	      		let selected = '';
-	      		return `<option value="${dataObj.name}" ${selected}>${dataObj.name}</option>`; 
-	      	});
-	      	document.getElementById("opt-region").insertAdjacentHTML("afterend", retData);
-	      	
-	      	//console.log(response);
+    //SELECT TAG OPTIONS
+    function ShowRegionList(){
+	   	$.ajax({
+	   		url: 'https://api.quarantine.country/api/v1/regions',
+	   		type: 'GET',
+			// data: formData,
+			dataType: 'JSON',
+			encoding: true,
+			success: function(response){
+				
+				let retData = response.data.map((dataObj, index)=>{
+					
+					return `<option value="${dataObj.name}" data-code="${dataObj.iso3166a2}">${dataObj.name}</option>`; 
+				}).sort();
+				document.getElementById("opt-region").insertAdjacentHTML("afterend", retData);
+				SetRegionList();
+				//console.log(response);
 
-	      	//More details on insertAdjacentHTML(): "https://www.w3schools.com/JSREF/met_node_insertadjacenthtml.asp"
-	      }
-	   }); 
-   }
+				//More details on insertAdjacentHTML(): "https://www.w3schools.com/JSREF/met_node_insertadjacenthtml.asp"
+			},
 
-   StateWiseData();
+			error: function(error){
+				console.log('Something went wrong in "Listing region"');
+			}
+	    }); 
+    }
+    //function to set the value of Region list to the user's country 
+  	function SetRegionList(){
+  		const AccsessToken = '82bcb8efa1a4b5';
+  		let region_API = `https://ipinfo.io?token=${AccsessToken}`;
+  		
+  		//let countryCode = '';
+  		let regionProm = $.get(region_API);
+		regionProm.then((response)=>{
+			let countryCode = response.country;
 
-   //STATE WISE COVID DATA
-   function StateWiseData(){
-   	//*note: only for INDIAN STATES
-   	//SOURCE: "https://covid-india-api.firebaseapp.com/#statewise-cases"
+			regionList = document.getElementById("select-region");
+			for(let i=0; i<regionList.length; i++){
+				if(regionList[i].dataset.code == countryCode){
+					regionList.selectedIndex = i;
+					
+				}
+			}
+
+		})
+		.catch((error)=>{
+			console.log('Unable to set User\'s Country');
+		});
+  	}
+
+    StateWiseData();
+
+    //STATE WISE COVID DATA
+    function StateWiseData(){
+   		//*note: only for INDIAN STATES
+   		//SOURCE: "https://covid-india-api.firebaseapp.com/#statewise-cases"
 		state_API = `https://covid-india-cases.herokuapp.com/states/`;
 
 		let state_promise = $.get(state_API);
@@ -239,10 +272,10 @@
 			let stateData = response.map((dataObj)=>{
 				return `<tr>
 					<td>${dataObj.state}</td>
-					<td>${dataObj.noOfCases}</td>
-					<td>${dataObj.active}</td>
-					<td>${dataObj.cured}</td>
-					<td>${dataObj.deaths}</td>
+					<td>${NumToWord(dataObj.noOfCases)}</td>
+					<td>${NumToWord(dataObj.active)}</td>
+					<td>${NumToWord(dataObj.cured)}</td>
+					<td>${NumToWord(dataObj.deaths)}</td>
 				</tr>`;
 			}).join("");
 
@@ -259,11 +292,11 @@
 		.catch(()=>{
 			console.log(`Something went wrong in STATE PROMISE`);
 		});
-   }
+    }
 
-   //DISTRICT WISE COVID DATA
- //   function districtWiseData(){
- //   	//*note: only for INDIAN CITIES
+   	//DISTRICT WISE COVID DATA
+ 	//function districtWiseData(){
+ 	//   	//*note: only for INDIAN CITIES
 	// 	district_API = `https://documenter.getpostman.com/view/10724784/SzYXXKmA?version=latest`;
 	// }
 
@@ -310,6 +343,7 @@
 
 	// Show Pie Chart Data (Not dynamic yet)
 	function LoadPieChart(chartData){
+		document.getElementById('load-pi-canvas').innerHTML = '<canvas id="covid-pie-chart"></canvas>';
 		var ctx = document.getElementById('covid-pie-chart').getContext('2d');
 		var myChart = new Chart(ctx, {
 		    type: 'doughnut',
@@ -340,12 +374,61 @@
 
 		    },
 		    options: {
-		      cutoutPercentage: 35, //50 - for doughnut, 0 - for pie
-		      animation:{
-		      	animateRotate: true, //will animate in with a rotation animation.
-		        	animateScale: true, //will animate scaling the chart from the center outwards.
-		      }
+		      	cutoutPercentage: 35, //50 - for doughnut, 0 - for pie
+			    animation:{
+			      	animateRotate: true, //will animate in with a rotation animation.
+			        animateScale: true, //will animate scaling the chart from the center outwards.
+			    }
 		    }
 		});
+	}
+
+
+	//function to convert number count to words
+	function NumToWord(num){
+
+		let retVal = '0';
+		let dp = 2;
+
+		//Over or equal to 1B
+		if(num >= 1000000000){
+			if(num == 1000000000){
+				retVal = '1B';
+			}
+
+			else if(num > 1000000000){
+				retVal = (num/1000000000).toFixed(dp)+'B';
+				//retVal = retVal.toFixed(2);
+			}
+		}
+
+		//Over or equal to 1M
+		else if(num >= 1000000){
+			if(num == 1000000){
+				retVal = '1M';
+			}
+
+			else if(num > 1000000){
+				retVal = (num/1000000).toFixed(dp)+'M';
+				//retVal = retVal.toFixed(2);
+			}
+		}
+
+		//Over or equal to 1K
+		else if(num >= 1000){
+			if(num == 1000){
+				retVal = '1K';
+			}
+
+			else if(num > 1000){
+				retVal = (num/1000).toFixed(dp)+'K';
+				//retVal = retVal.toFixed(1);
+			}
+		}
+
+		//just return num
+		else{ retVal = num; }
+		
+		return retVal;
 	}
    
