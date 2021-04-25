@@ -9,6 +9,10 @@
 		//LoadBarChart();
 
 		LoadPieChart();
+
+		//Load Global data summary
+		//GlobalDataSummary();
+		
 	});
 
 	// function selTest(){
@@ -126,6 +130,9 @@
 		.then(()=>{
 			//Display Country Flag
 			getCountryFlag(region_name);
+
+			//Load Global data summary
+			GlobalDataSummary();
 		})
 		.catch(()=>{
 			console.log(`something went wrong in getRegionData function`);
@@ -148,8 +155,8 @@
 	}
 
 	//FUNCTION TO GET REGION-WISE LATEST DATA SUMMARY (TABLE FORMAT)
-	function latestData(){
-		document.getElementById("show-latest").style["display"] = "block";
+	function GlobalDataSummary(){
+		document.getElementById("show-latest").style.display = "block";
 
 		$.ajax({
 			url: 'https://api.quarantine.country/api/v1/summary/latest',
