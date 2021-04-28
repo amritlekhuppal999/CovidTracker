@@ -1,37 +1,33 @@
 	$(document).ready(function(){
-		//getIpAdd();
 		//Show Region List
 		ShowRegionList();
 
-		//Default Region Data
+		//Get Users Region/Country Data 
 		GetUserRegionData();
 
-		//LoadBarChart();
+		//Get data for indian states
+		//StateWiseData();
 
-		LoadPieChart();
-
-		//Load Global data summary
-		//GlobalDataSummary();
-		
+		//fetch all the covid data on set interval
+		ReloadResults();
 	});
 
-	// function selTest(){
-	// 	console.log("it works");
-	// }
+	//function to fetch all the covid data on set interval
+	function ReloadResults(){
+		//that many seconds
+		let durration = 300;
+		
+		setTimeout(()=>{
+			
+			GetSelectedRegionData();
+			//StateWiseData();
 
-	// GET USER IP ADDRESS
-  	// function getIpAdd(){
-  	// 	let API_IPv4 = 'https://api.ipify.org?format=json';
-  	// 	let API_IPv6 = 'https://api6.ipify.org?format=json';
-  	// 	$.get(API_IPv4, (response, status)=>{
-  	// 		//console.log(response);
-  			
-  	// 		document.getElementById("show-ip").innerHTML = response.ip;
-  	// 		//getRegionFromIP(response.ip);
-  	// 	});
-  	// }
+			ReloadResults();
+			
+		}, 1000*durration);
+	}
 
-  	// API TO GET COUNTRY FLAG BASED ON COUNTRY NAME
+	// API TO GET COUNTRY FLAG BASED ON COUNTRY NAME
   	function getCountryFlag(country_name){
   		//source: "https://restcountries.eu/#api-endpoints-code"
   		const country_API = `https://restcountries.eu/rest/v2/name/${country_name}?fullText=true`;
@@ -90,17 +86,18 @@
   	}
    	
    	//GET SELECTED REGION DATA
-	function getSelectedRegionData(){
+	function GetSelectedRegionData(){
 		let ser_bar = document.getElementById("select-region").value;
 		getRegionData(ser_bar);
 	}
 
 	// FETCH REGION DATA BASED ON REGION NAME
 	function getRegionData(region_name){
+
 		const region_API = `https://api.quarantine.country/api/v1/summary/region?region=${region_name}`;
 
 		let region_promise = $.get(region_API);
-
+		
 		region_promise.then((response)=>{
 			//console.log(response.data.summary);
 			let respObj = response.data.summary;
@@ -125,12 +122,20 @@
 					</div>
 				</div>`;
 			document.getElementById("specific-region").innerHTML = retData;
+
+			//show Region State Data
+			if(region_name == "India"){
+				StateWiseData();
+			}else{
+				document.getElementById('state-sec').style.display = "none";
+			}
+
 			// document.getElementById("region-name").innerHTML = region_name.toUpperCase();
 		})
 		.then(()=>{
 			//Display Country Flag
 			getCountryFlag(region_name);
-
+			
 			//Load Global data summary
 			GlobalDataSummary();
 		})
@@ -263,8 +268,6 @@
 		});
   	}
 
-    StateWiseData();
-
     //STATE WISE COVID DATA
     function StateWiseData(){
    		//*note: only for INDIAN STATES
@@ -286,14 +289,7 @@
 				</tr>`;
 			}).join("");
 
-			// let stateDataRow = `<td colspan="5">
-			// 	<div style="overflow-x: auto; height:250px;">
-			// 		<table>
-			//          ${stateData}
-			//       </table>
-			// 	</div>
-			// </td>`;
-
+			document.getElementById('state-sec').style.display = "block";
 			document.getElementById('state-data').innerHTML = stateData;
 		})
 		.catch(()=>{
@@ -301,14 +297,7 @@
 		});
     }
 
-   	//DISTRICT WISE COVID DATA
- 	//function districtWiseData(){
- 	//   	//*note: only for INDIAN CITIES
-	// 	district_API = `https://documenter.getpostman.com/view/10724784/SzYXXKmA?version=latest`;
-	// }
-
-
-	// Show BAR Chart Data
+   	// Show BAR Chart Data
 	function LoadBarChart(chartData){
 
 		var ctx = document.getElementById('covid-chart').getContext('2d');
@@ -438,4 +427,25 @@
 		
 		return retVal;
 	}
+
+
+	/*//DISTRICT WISE COVID DATA
+	 	function districtWiseData(){
+	 	  	//*note: only for INDIAN CITIES
+			district_API = `https://documenter.getpostman.com/view/10724784/SzYXXKmA?version=latest`;
+		}
+	*/
+
+	/*// GET USER IP ADDRESS
+	  	function getIpAdd(){
+	  		let API_IPv4 = 'https://api.ipify.org?format=json';
+	  		let API_IPv6 = 'https://api6.ipify.org?format=json';
+	  		$.get(API_IPv4, (response, status)=>{
+	  			//console.log(response);
+	  			
+	  			document.getElementById("show-ip").innerHTML = response.ip;
+	  			//getRegionFromIP(response.ip);
+	  		});
+	  	}
+	*/
    
