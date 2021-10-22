@@ -1,16 +1,44 @@
 	$(document).ready(function(){
+		
+		//CanvasLoading();
+		
 		//Show Region List
-		ShowRegionList();
+		//ShowRegionList();
 
 		//Get Users Region/Country Data 
-		GetUserRegionData();
+		//GetUserRegionData();
 
-		//Get data for indian states
+		//Get data for indian states (Not in Use)
 		//StateWiseData();
 
 		//fetch all the covid data on set interval
-		ReloadResults();
+		//ReloadResults();
+
+		SiteDown();
 	});
+
+	function SiteDown(){
+		const container = document.getElementById('data-container');
+		
+		const pageFooter = document.getElementsByClassName('page-footer')[0];
+		pageFooter.remove();
+
+		container.innerHTML = `
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card margin-bottom-15">
+						<div class="card-body text-center">
+							<h1>The Site is Under Maintenance</h1>
+						</div>
+					</div>
+				<div>
+			</div>
+		`;
+
+		console.clear();
+		console.log('Under Maintenance');
+		return false;
+	}
 
 	//function to fetch all the covid data on set interval
 	function ReloadResults(){
@@ -92,7 +120,7 @@
 	}
 
 	// FETCH REGION DATA BASED ON REGION NAME
-	function getRegionData(region_name){
+	function getRegionData(region_name){ //DOWN NEED TO UPDATE
 
 		const region_API = `https://api.quarantine.country/api/v1/summary/region?region=${region_name}`;
 
@@ -160,7 +188,7 @@
 	}
 
 	//FUNCTION TO GET REGION-WISE LATEST DATA SUMMARY (TABLE FORMAT)
-	function GlobalDataSummary(){
+	function GlobalDataSummary(){ //DOWN NEED TO UPDATE
 		document.getElementById("show-latest").style.display = "block";
 
 		$.ajax({
@@ -194,7 +222,7 @@
 	}
 
     // FUNCTION TO LIST ALL REGIONS
-    function allRegions(){
+    function allRegions(){ //DOWN NEED TO UPDATE
 	   	$.ajax({
 			url: 'https://api.quarantine.country/api/v1/regions',
 			type: 'GET',
@@ -219,7 +247,7 @@
     }
 
     //SELECT TAG OPTIONS
-    function ShowRegionList(){
+    function ShowRegionList(){ //DOWN NEED TO UPDATE
 	   	$.ajax({
 	   		url: 'https://api.quarantine.country/api/v1/regions',
 	   		type: 'GET',
@@ -428,6 +456,25 @@
 		return retVal;
 	}
 
+	//function to show "loading" on canvas
+	function CanvasLoading(){
+		const canvas = document.getElementById('covid-pie-chart');
+		let ctx = canvas.getContext('2d');
+		
+		let TextProp = {
+			font: "30px Arial",
+			text: "Loading...",
+			x: 0,
+			y: 90
+		};
+
+		//Font family for custom text
+		ctx.font = TextProp.font;
+		
+		//write custom text on canvas
+		ctx.fillText(TextProp.text, TextProp.x, TextProp.y);
+		ctx.fill();
+	}
 
 	/*//DISTRICT WISE COVID DATA
 	 	function districtWiseData(){
